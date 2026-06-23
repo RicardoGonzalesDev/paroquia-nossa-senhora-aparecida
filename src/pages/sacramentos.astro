@@ -1,0 +1,171 @@
+---
+// src/pages/sacramentos.astro
+import Layout from '../layouts/Layout.astro';
+
+const sacramentos = [
+  {
+    nome: 'Batismo',
+    icon: '🕊️',
+    cor: '#1B3A6B',
+    desc: 'O Batismo é a porta de entrada para a vida cristã. Por ele, somos inseridos no Corpo de Cristo, a Igreja, e recebemos a graça de Deus.',
+    info: [
+      'Batismos de crianças: último domingo do mês (mediante preparação dos pais)',
+      'Batismo de adultos: processo do RICA (Rito de Iniciação Cristã de Adultos)',
+      'Documentos: certidão de nascimento, RG dos pais e dos padrinhos',
+      'Agendar com no mínimo 2 meses de antecedência',
+    ],
+  },
+  {
+    nome: 'Eucaristia',
+    icon: '🍞',
+    cor: '#C9A84C',
+    desc: 'A Eucaristia é o centro e fonte de toda a vida cristã. Na Missa, celebramos a presença real de Cristo que se entrega por nós.',
+    info: [
+      'Missas diárias às 7h (e outros horários — ver Horários)',
+      'Primeira Eucaristia: após dois anos de catequese',
+      'Exige preparo sacramental e reconciliação prévia',
+    ],
+  },
+  {
+    nome: 'Crisma',
+    icon: '🔥',
+    cor: '#E84444',
+    desc: 'A Crisma confirma e fortalece a graça recebida no Batismo. O crismando assume pessoalmente sua fé e se torna testemunha de Cristo.',
+    info: [
+      'Formação de dois anos para jovens a partir dos 13 anos',
+      'Turmas também para adultos não crismados',
+      'Inscrições abertas no início de cada ano pastoral',
+    ],
+  },
+  {
+    nome: 'Matrimônio',
+    icon: '💍',
+    cor: '#2B5499',
+    desc: 'O Matrimônio é aliança sagrada entre o homem e a mulher, celebrada diante de Deus e da comunidade, sinal do amor de Cristo pela Igreja.',
+    info: [
+      'Agendamento com no mínimo 6 meses de antecedência',
+      'Curso de noivos obrigatório (verificar datas)',
+      'Documentos: certidões de batismo e crisma de ambos',
+      'Um dos noivos deve ser católico praticante',
+    ],
+  },
+  {
+    nome: 'Reconciliação',
+    icon: '✝️',
+    cor: '#4A7C59',
+    desc: 'O Sacramento da Penitência é o encontro com a misericórdia de Deus. Por ele, os pecados são perdoados e a paz da alma é restaurada.',
+    info: [
+      'Confissões: sextas-feiras às 17h30',
+      'Outros horários: mediante agendamento com o pároco',
+      'Confissões coletivas em datas especiais (Advento, Quaresma)',
+    ],
+  },
+  {
+    nome: 'Unção dos Enfermos',
+    icon: '🕯️',
+    cor: '#7B5EA7',
+    desc: 'A Unção dos Enfermos é o sacramento da cura e do conforto espiritual. Cristo age naqueles que sofrem por doença ou velhice.',
+    info: [
+      'Para enfermos graves, idosos e antes de cirurgias',
+      'Visitamos hospitais, casas e asilos',
+      'Ligue para a secretaria paroquial para agendar',
+      'Ministrado durante as missas em datas especiais',
+    ],
+  },
+];
+---
+<Layout title="Sacramentos" description="Sacramentos da Paróquia Nossa Senhora Aparecida de Andradas/MG – Batismo, Eucaristia, Crisma, Matrimônio, Confissão e Unção.">
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Graça e Vida</p>
+      <h1>Sacramentos</h1>
+      <p class="lead">Os sacramentos são sinais visíveis da graça invisível de Deus. A Igreja celebra os momentos mais importantes da vida cristã.</p>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,30 C480,55 960,5 1440,30 L1440,50 L0,50 Z" fill="#F8F5EF"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="sacramentos-page">
+    <div class="container">
+
+      <div class="sacramentos-list">
+        {sacramentos.map(({ nome, icon, cor, desc, info }) => (
+          <article class="sacramento-detail" style={`--cor: ${cor}`}>
+            <div class="sacramento-header">
+              <span class="sacramento-big-icon">{icon}</span>
+              <div>
+                <h2>{nome}</h2>
+                <p class="sacramento-desc">{desc}</p>
+              </div>
+            </div>
+            <div class="sacramento-info">
+              <h4>Informações Práticas</h4>
+              <ul>
+                {info.map(item => <li>{item}</li>)}
+              </ul>
+              <a href="/contato" class="btn btn-primary">Agendar / Saber mais</a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+.page-hero { background:linear-gradient(150deg,#0f2347 0%,var(--azul) 100%); padding-block:4.5rem 3rem; position:relative; overflow:hidden; }
+.page-hero .eyebrow { display:block; font-size:.78rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--dourado); margin-bottom:.75rem; }
+.page-hero h1 { font-family:var(--font-display); color:var(--branco); font-size:clamp(2rem,4vw,3rem); margin-bottom:.75rem; }
+.page-hero .lead { color:rgba(255,255,255,.75); max-width:560px; font-size:1.05rem; }
+.hero-wave { position:absolute; bottom:-1px; left:0; right:0; }
+.hero-wave svg { width:100%; display:block; }
+
+.sacramentos-page { padding-block:4rem 5rem; }
+.sacramentos-list { display:flex; flex-direction:column; gap:2rem; }
+
+.sacramento-detail {
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-left: 5px solid var(--cor);
+}
+@media (max-width:700px) { .sacramento-detail { grid-template-columns:1fr; } }
+
+.sacramento-header {
+  padding: 2.25rem 2rem;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  border-right: 1px solid var(--cinza-cl);
+}
+.sacramento-big-icon { font-size:2.5rem; flex-shrink:0; margin-top:.2rem; }
+.sacramento-header h2 { font-family:var(--font-display); color:var(--azul); font-size:1.5rem; margin-bottom:.6rem; }
+.sacramento-desc { color:var(--cinza); font-size:.9rem; line-height:1.75; margin:0; }
+
+.sacramento-info { padding:2.25rem 2rem; background:#fafaf8; }
+.sacramento-info h4 { font-family:var(--font-display); color:var(--azul); font-size:.9rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; margin-bottom:1rem; color:var(--cor); }
+.sacramento-info ul { list-style:none; display:flex; flex-direction:column; gap:.55rem; margin-bottom:1.5rem; }
+.sacramento-info li {
+  font-size:.875rem;
+  color:var(--cinza);
+  padding-left:1.2rem;
+  position:relative;
+  line-height:1.6;
+}
+.sacramento-info li::before {
+  content:'›';
+  position:absolute;
+  left:0;
+  color:var(--cor);
+  font-weight:700;
+}
+</style>

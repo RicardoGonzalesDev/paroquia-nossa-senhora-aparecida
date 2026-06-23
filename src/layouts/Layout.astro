@@ -1,0 +1,486 @@
+---
+// src/layouts/Layout.astro
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Paróquia Nossa Senhora Aparecida – Andradas, Minas Gerais' } = Astro.props;
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title} | Paróquia N. Sra. Aparecida – Andradas/MG</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo" aria-label="Início">
+        <span class="logo-cross">✝</span>
+        <div class="logo-text">
+          <span class="logo-main">N. Sra. Aparecida</span>
+          <span class="logo-sub">Andradas · MG</span>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav">
+        <a href="/">Início</a>
+        <a href="/sobre">A Paróquia</a>
+        <a href="/horarios">Horários</a>
+        <a href="/sacramentos">Sacramentos</a>
+        <a href="/blog">Blog</a>
+        <a href="/contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span class="logo-cross" style="font-size:2rem;color:var(--dourado)">✝</span>
+        <p class="footer-name">Paróquia Nossa Senhora Aparecida</p>
+        <p class="footer-city">Andradas, Minas Gerais</p>
+        <p class="footer-diocese">Diocese de Pouso Alegre</p>
+      </div>
+
+      <div>
+        <h4>Contato</h4>
+        <p>Rua da Paróquia, s/n<br>Centro – Andradas/MG</p>
+        <p>📞 (35) 9999-0000</p>
+        <p>✉️ paroquia@aparecida-andradas.com.br</p>
+      </div>
+
+      <div>
+        <h4>Links Rápidos</h4>
+        <ul>
+          <li><a href="/horarios">Horários de Missa</a></li>
+          <li><a href="/sacramentos">Sacramentos</a></li>
+          <li><a href="/blog">Notícias & Blog</a></li>
+          <li><a href="/contato">Fale Conosco</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Siga-nos</h4>
+        <p>Acompanhe nossa comunidade nas redes sociais e fique por dentro das novidades e eventos.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook" class="social-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="social-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube" class="social-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="#" aria-label="WhatsApp" class="social-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {new Date().getFullYear()} Paróquia Nossa Senhora Aparecida – Andradas/MG · Todos os direitos reservados · <a href="/privacidade" class="footer-legal-link">Privacidade</a></p>
+    </div>
+  </footer>
+
+  <div class="cookie-float" id="cookie-float">
+    <p>Este site usa cookies para melhorar sua experiência. <a href="/privacidade" class="cookie-float-link">Política de Privacidade</a>.</p>
+    <button type="button" id="cookie-float-accept">Aceitar</button>
+  </div>
+
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" aria-live="polite" hidden>
+    <div class="cookie-banner-inner container">
+      <div class="cookie-banner-text">
+        <p id="cookie-title" class="cookie-banner-title">Cookies e privacidade</p>
+        <p id="cookie-desc" class="cookie-banner-desc">
+          Utilizamos cookies para melhorar sua experiência de navegação e analisar o tráfego do site.
+          Ao continuar, você concorda com o uso de cookies conforme nossa
+          <a href="/privacidade" class="cookie-policy-link">política de privacidade</a>.
+        </p>
+      </div>
+      <div class="cookie-banner-actions">
+        <button type="button" class="btn btn-primary cookie-accept" id="cookie-accept">Aceitar</button>
+        <button type="button" class="cookie-decline" id="cookie-decline">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.getElementById('nav-toggle');
+    const nav = document.getElementById('site-nav');
+    toggle?.addEventListener('click', () => {
+      const open = nav?.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    // Sticky header shadow on scroll
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header?.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Close nav on link click
+    nav?.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => { nav.classList.remove('open'); toggle?.setAttribute('aria-expanded', 'false'); })
+    );
+
+    // Cookie consent banner
+    const COOKIE_KEY = 'nsa-cookie-consent';
+    const cookieBanner = document.getElementById('cookie-banner');
+    const hideCookieBanner = () => cookieBanner?.setAttribute('hidden', '');
+    const cookieFloat = document.getElementById('cookie-float');
+    const hideCookieFloat = () => cookieFloat?.setAttribute('hidden', '');
+    const acceptCookies = () => {
+      localStorage.setItem(COOKIE_KEY, 'accepted');
+      hideCookieBanner();
+      hideCookieFloat();
+    };
+
+    if (!localStorage.getItem(COOKIE_KEY)) {
+      cookieBanner?.removeAttribute('hidden');
+      cookieFloat?.removeAttribute('hidden');
+    }
+
+    document.getElementById('cookie-accept')?.addEventListener('click', acceptCookies);
+    document.getElementById('cookie-float-accept')?.addEventListener('click', acceptCookies);
+
+    document.getElementById('cookie-decline')?.addEventListener('click', () => {
+      localStorage.setItem(COOKIE_KEY, 'declined');
+      hideCookieBanner();
+      hideCookieFloat();
+    });
+  </script>
+</body>
+</html>
+
+<style is:global>
+@import '../styles/global.css';
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--azul);
+  transition: box-shadow 0.2s;
+}
+.site-header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.25); }
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  gap: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+.logo-cross {
+  font-size: 1.6rem;
+  color: var(--dourado);
+  line-height: 1;
+}
+.logo-text { display: flex; flex-direction: column; }
+.logo-main {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--branco);
+  line-height: 1.2;
+}
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--dourado-cl);
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.site-nav a {
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  transition: color 0.15s, background 0.15s;
+  letter-spacing: 0.01em;
+}
+.site-nav a:hover {
+  color: var(--branco);
+  background: rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--branco);
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; }
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0; right: 0;
+    background: var(--azul);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.5rem 1.5rem;
+    gap: 0.25rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .site-nav.open { display: flex; }
+  .site-nav a { width: 100%; padding: 0.6rem 0.75rem; }
+}
+
+/* ─── Footer ───────────────────────────────────────────────────────────────── */
+.site-footer {
+  background: var(--azul);
+  color: rgba(255,255,255,0.75);
+  padding-top: 4rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+}
+.footer-brand { display: flex; flex-direction: column; gap: 0.35rem; }
+.footer-name { font-family: var(--font-display); color: var(--branco); font-size: 1.05rem; }
+.footer-city { color: var(--dourado-cl); font-size: 0.85rem; }
+.footer-diocese { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+.site-footer h4 {
+  font-family: var(--font-display);
+  color: var(--branco);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.site-footer p { font-size: 0.875rem; line-height: 1.65; margin-bottom: 0.4rem; }
+.site-footer ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.site-footer ul li a { color: rgba(255,255,255,0.7); font-size: 0.875rem; }
+.site-footer ul li a:hover { color: var(--dourado-cl); text-decoration: none; }
+
+.social-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.75);
+  transition: all 0.2s;
+}
+.social-btn:hover { border-color: var(--dourado); color: var(--dourado); text-decoration: none; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-block: 1.25rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+}
+.footer-legal-link {
+  color: rgba(255,255,255,0.55);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.footer-legal-link:hover { color: var(--dourado-cl); text-decoration: none; }
+
+.cookie-policy-link {
+  color: var(--dourado-cl);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cookie-policy-link:hover { color: var(--dourado); text-decoration: none; }
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ─── Cookie Float ──────────────────────────────────────────────────────────── */
+.cookie-float {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 300;
+  background: var(--azul);
+  color: var(--branco);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: floatIn 0.4s ease-out;
+}
+.cookie-float[hidden] { display: none; }
+.cookie-float p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0;
+  color: rgba(255,255,255,0.85);
+}
+.cookie-float-link {
+  color: var(--dourado-cl);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cookie-float-link:hover { color: var(--dourado); }
+.cookie-float button {
+  align-self: flex-end;
+  background: var(--dourado);
+  color: var(--azul);
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.cookie-float button:hover { opacity: 0.85; }
+
+@keyframes floatIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 540px) {
+  .cookie-float {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: none;
+  }
+}
+
+/* ─── Cookie banner ─────────────────────────────────────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--azul);
+  border-top: 2px solid var(--dourado);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+  padding-block: 1.25rem;
+  animation: cookieSlideUp 0.4s ease-out;
+}
+.cookie-banner[hidden] { display: none; }
+
+@keyframes cookieSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.cookie-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cookie-banner-title {
+  font-family: var(--font-display);
+  color: var(--branco);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.cookie-banner-desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  max-width: 640px;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.cookie-banner .btn-primary {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.82rem;
+}
+
+.cookie-decline {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.6rem 0.75rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.cookie-decline:hover { color: var(--dourado-cl); }
+
+@media (max-width: 640px) {
+  .cookie-banner-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cookie-banner-actions {
+    justify-content: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-banner { animation: none; }
+}
+</style>

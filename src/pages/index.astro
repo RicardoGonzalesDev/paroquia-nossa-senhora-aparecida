@@ -1,0 +1,485 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import { getAvisos, getMissas } from '../lib/notion.js';
+
+const missas = await getMissas();
+const avisos = await getAvisos();
+
+const horariosHome = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => ({
+  dia,
+  horarios: (missas[dia] ?? []).map(({ horario, observacao }) =>
+    observacao ? `${horario} – ${observacao}` : horario
+  ),
+  destaque: dia === 'Domingo',
+}));
+
+const stars = Array.from({ length: 48 }, (_, i) => ({
+  left: ((i * 37 + 13) % 97) + 1,
+  top: ((i * 53 + 7) % 93) + 2,
+  size: (i % 3) + 1.5,
+  delay: (i % 8) * 0.6,
+  duration: 2.5 + (i % 5) * 0.8,
+  opacity: 0.4 + (i % 4) * 0.15,
+}));
+---
+<Layout title="Início" description="Paróquia Nossa Senhora Aparecida de Andradas, Minas Gerais – horários de missa, sacramentos, eventos e comunidade.">
+
+  <!-- ─── HERO ─────────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <picture class="hero-bg-picture">
+        <source
+          media="(max-width: 768px)"
+          srcset="/images/nossa-senhora-aparecida-banner-mobile.webp"
+          width="400"
+          height="750"
+        />
+        <img
+          src="/images/nossa-senhora-aparecida-banner.webp"
+          alt=""
+          class="hero-bg-img"
+        />
+      </picture>
+      <div class="hero-overlay"></div>
+      <div class="hero-stars">
+        {stars.map((star) => (
+          <span
+            class="star"
+            style={`left:${star.left}%;top:${star.top}%;width:${star.size}px;height:${star.size}px;animation-delay:${star.delay}s;animation-duration:${star.duration}s;opacity:${star.opacity}`}
+          />
+        ))}
+      </div>
+    </div>
+
+    <div class="container hero-layout">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Diocese de Pouso Alegre · Andradas/MG</p>
+        <h1>
+          Paróquia Nossa Senhora<br>
+          <em>Aparecida</em>
+        </h1>
+        <p class="hero-sub">
+          Uma comunidade de fé, esperança e amor no coração de Andradas.<br>
+          Todos são bem-vindos à nossa casa.
+        </p>
+        <div class="hero-actions">
+          <a href="/horarios" class="btn btn-primary">Ver Horários de Missa</a>
+          <a href="/sobre" class="btn btn-outline">Conheça a Paróquia</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C360,70 1080,10 1440,40 L1440,60 L0,60 Z" fill="#F8F5EF"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ─── AVISOS RÁPIDOS ───────────────────────────────────────────────────── -->
+  <section class="avisos-bar">
+    <div class="container avisos-inner">
+      <span class="aviso-label">📢 Avisos</span>
+      <div class="avisos-list">
+        {avisos.map((aviso, index) => (
+          <>
+            {index > 0 && <span class="sep">·</span>}
+            {aviso.link
+              ? <a href={aviso.link}>{aviso.texto}</a>
+              : <span>{aviso.texto}</span>
+            }
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HORÁRIOS ─────────────────────────────────────────────────────────── -->
+  <section class="horarios-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Venha celebrar conosco</span>
+        <h2>Horários de Missa</h2>
+        <p>Participe da Eucaristia e fortaleça sua fé em comunidade.</p>
+      </div>
+
+      <div class="ornament">✝</div>
+
+      <div class="horarios-grid">
+        {horariosHome.map(({ dia, horarios, destaque }) => (
+          <div class:list={['horario-card', destaque && 'destaque']}>
+            <p class="horario-dia">{dia}</p>
+            <ul class="horario-list">
+              {horarios.length === 0
+                ? <li>Sem missa</li>
+                : horarios.map(h => <li>{h}</li>)
+              }
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SACRAMENTOS ──────────────────────────────────────────────────────── -->
+  <section class="sacramentos-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Graça e Vida</span>
+        <h2>Sacramentos</h2>
+        <p>A Igreja celebra os momentos mais importantes da vida cristã. Entre em contato para agendar.</p>
+      </div>
+
+      <div class="sacramentos-grid">
+        {[
+          { nome: 'Batismo',       icon: '🕊️', desc: 'Portal da vida cristã. Batizamos crianças e adultos com agendamento prévio.' },
+          { nome: 'Eucaristia',    icon: '🍞', desc: 'O centro da vida paroquial. Missas diárias e dominicais para toda a comunidade.' },
+          { nome: 'Crisma',        icon: '🔥', desc: 'Confirmação da fé. Turmas com formação de dois anos para jovens e adultos.' },
+          { nome: 'Matrimônio',    icon: '💍', desc: 'Celebre o amor sob a bênção de Deus. Agende com antecedência mínima de 6 meses.' },
+          { nome: 'Reconciliação', icon: '✝️', desc: 'Confissões às sextas-feiras às 17h30 e sempre que solicitado ao pároco.' },
+          { nome: 'Unção dos Enfermos', icon: '🕯️', desc: 'Visitamos hospitais e domicílios. Entre em contato para solicitar.' },
+        ].map(({ nome, icon, desc }) => (
+          <article class="sacramento-card">
+            <span class="sacramento-icon">{icon}</span>
+            <h3>{nome}</h3>
+            <p>{desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SOBRE (CTA) ──────────────────────────────────────────────────────── -->
+  <section class="cta-section">
+    <div class="container cta-inner">
+      <div class="cta-text">
+        <span class="eyebrow" style="color:var(--dourado-cl)">Nossa história</span>
+        <h2>Uma comunidade enraizada na fé</h2>
+        <p>
+          Fundada há décadas, a Paróquia Nossa Senhora Aparecida de Andradas é ponto de encontro, oração e serviço ao próximo. Conheça nossa história, nossos grupos e ministérios.
+        </p>
+        <a href="/sobre" class="btn btn-primary" style="margin-top:1.5rem">Conheça a Paróquia</a>
+      </div>
+      <div class="cta-deco" aria-hidden="true">
+        <div class="cta-cross">✝</div>
+        <div class="cta-ring"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BLOG PREVIEW ─────────────────────────────────────────────────────── -->
+  <section class="blog-preview">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Comunidade & Fé</span>
+        <h2>Notícias da Paróquia</h2>
+        <p>Fique por dentro dos eventos, reflexões e novidades da nossa comunidade.</p>
+      </div>
+
+      <div class="blog-cta-box">
+        <p>Acesse o blog completo para ver todas as publicações, reflexões e anúncios da paróquia, integrados diretamente do Notion.</p>
+        <a href="/blog" class="btn btn-primary">Ver todas as publicações</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+/* ─── Hero ─────────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  padding-block: 6rem 4rem;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-bg-picture {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+@media (max-width: 768px) {
+  .hero {
+    min-height: min(85vh, 750px);
+    align-items: flex-end;
+    padding-block: 5rem 3.5rem;
+  }
+  .hero-bg-img {
+    object-position: center top;
+  }
+  .hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(8, 20, 45, 0.82) 0%,
+      rgba(15, 35, 71, 0.55) 45%,
+      rgba(27, 58, 107, 0.25) 100%
+    );
+  }
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(8, 20, 45, 0.88) 0%,
+    rgba(15, 35, 71, 0.72) 45%,
+    rgba(27, 58, 107, 0.45) 100%
+  );
+}
+
+/* Partículas de estrelas */
+.hero-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, #F0E0A4 40%, transparent 70%);
+  box-shadow: 0 0 6px 1px rgba(240, 224, 164, 0.6);
+  animation: twinkle ease-in-out infinite;
+  pointer-events: none;
+}
+.star:nth-child(3n) {
+  background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0.8) 50%, transparent 70%);
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.5);
+}
+.star:nth-child(5n) {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  background: #F0E0A4;
+  box-shadow: 0 0 8px 2px rgba(201, 168, 76, 0.7);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .star { animation: none; }
+}
+
+.hero-layout {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  text-align: left;
+  max-width: 640px;
+}
+.hero-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dourado-cl);
+  margin-bottom: 1rem;
+}
+.hero-content h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+  color: var(--branco);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+}
+.hero-content h1 em {
+  font-style: italic;
+  color: var(--dourado);
+}
+.hero-sub {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 2.25rem;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.hero-wave {
+  z-index: 3;
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+}
+.hero-wave svg { width: 100%; display: block; }
+
+/* ─── Avisos ───────────────────────────────────────────────────────────────── */
+.avisos-bar {
+  background: var(--azul-claro);
+  border-bottom: 2px solid var(--dourado-cl);
+  padding-block: 0;
+}
+.avisos-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 48px;
+  flex-wrap: wrap;
+  padding-block: 0.65rem;
+}
+.aviso-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--azul);
+  white-space: nowrap;
+}
+.avisos-list {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.86rem;
+  color: var(--cinza);
+}
+.avisos-list span,
+.avisos-list a {
+  white-space: pre-line;
+}
+.avisos-list a {
+  color: var(--azul);
+  font-weight: 600;
+  text-decoration: none;
+}
+.avisos-list a:hover { text-decoration: underline; }
+.sep { color: var(--dourado); }
+
+/* ─── Horários ─────────────────────────────────────────────────────────────── */
+.horarios-section { background: var(--creme); }
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.horario-card {
+  background: var(--branco);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 3px solid var(--azul-claro);
+  transition: transform 0.2s;
+}
+.horario-card:hover { transform: translateY(-2px); }
+.horario-card.destaque { border-top-color: var(--dourado); background: #fffdf5; }
+.horario-dia {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--azul);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+.horario-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.horario-list li {
+  font-size: 0.82rem;
+  color: var(--cinza);
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--cinza-cl);
+}
+.horario-list li:last-child { border-bottom: none; }
+
+/* ─── Sacramentos ──────────────────────────────────────────────────────────── */
+.sacramentos-section { background: var(--azul-claro); }
+.sacramentos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.sacramento-card {
+  background: var(--branco);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.sacramento-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.sacramento-icon { font-size: 2rem; display: block; margin-bottom: 1rem; }
+.sacramento-card h3 {
+  font-family: var(--font-display);
+  color: var(--azul);
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+}
+.sacramento-card p { color: var(--cinza); font-size: 0.9rem; line-height: 1.65; }
+
+/* ─── CTA ──────────────────────────────────────────────────────────────────── */
+.cta-section {
+  background: linear-gradient(135deg, var(--azul) 0%, #0f2347 100%);
+  padding-block: 5rem;
+}
+.cta-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4rem;
+  align-items: center;
+}
+.cta-text .eyebrow { display: block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.cta-text h2 { color: var(--branco); font-size: clamp(1.75rem, 3vw, 2.5rem); margin-bottom: 1rem; }
+.cta-text p { color: rgba(255,255,255,0.75); max-width: 480px; font-size: 1.05rem; }
+
+.cta-deco { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
+.cta-cross {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: var(--dourado);
+  opacity: 0.9;
+  animation: pulse-cross 3s ease-in-out infinite;
+}
+.cta-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  animation: expand-ring 3s ease-in-out infinite;
+}
+@keyframes pulse-cross { 0%,100%{transform:scale(1);opacity:.9} 50%{transform:scale(1.05);opacity:1} }
+@keyframes expand-ring { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.1);opacity:.6} }
+
+@media (max-width: 640px) {
+  .cta-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .cta-deco { display: none; }
+}
+
+/* ─── Blog preview ─────────────────────────────────────────────────────────── */
+.blog-preview { background: var(--creme); }
+.blog-cta-box {
+  max-width: 600px;
+  margin-inline: auto;
+  text-align: center;
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 3rem 2.5rem;
+  border-top: 4px solid var(--dourado);
+}
+.blog-cta-box p { color: var(--cinza); margin-bottom: 1.75rem; font-size: 1rem; line-height: 1.7; }
+</style>

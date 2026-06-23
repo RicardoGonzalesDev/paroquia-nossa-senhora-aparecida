@@ -1,0 +1,282 @@
+---
+// src/pages/blog/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import { getPosts, getPostContent } from '../../lib/notion.js';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const content = await getPostContent(post.id);
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+}
+---
+<Layout title={post.title} description={post.summary || post.title}>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Navegação estrutural">
+    <div class="container">
+      <a href="/">Início</a>
+      <span aria-hidden="true">›</span>
+      <a href="/blog">Blog</a>
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{post.title}</span>
+    </div>
+  </nav>
+
+  <!-- Post Hero -->
+  <section class="post-hero">
+    {post.coverUrl && (
+      <div class="post-hero-img">
+        <img src={post.coverUrl} alt={post.title} />
+        <div class="post-hero-overlay"></div>
+      </div>
+    )}
+    <div class="container post-hero-content">
+      <span class="badge">{post.category}</span>
+      <h1>{post.title}</h1>
+      <div class="post-byline">
+        <span class="post-date">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <time datetime={post.date}>{formatDate(post.date)}</time>
+        </span>
+        <span class="post-source">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933z"/></svg>
+          Via Notion
+        </span>
+      </div>
+      {post.summary && <p class="post-hero-summary">{post.summary}</p>}
+    </div>
+  </section>
+
+  <!-- Post Content -->
+  <section class="post-content-section">
+    <div class="container post-layout">
+
+      <!-- Main content -->
+      <article class="post-article">
+        <div class="prose" set:html={content} />
+
+        <div class="post-footer">
+          <div class="ornament">✝</div>
+          <a href="/blog" class="btn btn-primary">← Voltar ao Blog</a>
+        </div>
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="post-sidebar">
+        <div class="sidebar-card">
+          <h4>A Paróquia</h4>
+          <p>Nossa Senhora Aparecida de Andradas, MG — Diocese de Poços de Caldas.</p>
+          <a href="/sobre" class="sidebar-link">Saiba mais →</a>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>Próximas Missas</h4>
+          <ul class="sidebar-missas">
+            <li><strong>Dom</strong> 7h · 9h · 19h</li>
+            <li><strong>Seg</strong> 7h</li>
+            <li><strong>Ter</strong> 7h · 19h</li>
+            <li><strong>Qua</strong> 7h · 19h</li>
+            <li><strong>Sex</strong> 7h · 17h30 · 19h</li>
+            <li><strong>Sáb</strong> 7h30 · 19h</li>
+          </ul>
+          <a href="/horarios" class="sidebar-link">Ver todos os horários →</a>
+        </div>
+
+        <div class="sidebar-card sidebar-notion">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933z"/></svg>
+          <p>Este conteúdo é gerenciado pelo <strong>Notion</strong> e publicado automaticamente.</p>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+/* ─── Breadcrumb ─────────────────────────────────────────────────────────────── */
+.breadcrumb {
+  background: var(--azul-claro);
+  border-bottom: 1px solid var(--cinza-cl);
+  padding-block: 0.65rem;
+  font-size: 0.82rem;
+}
+.breadcrumb .container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--cinza);
+}
+.breadcrumb a { color: var(--azul-medio); }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span[aria-current] { color: var(--cinza); font-weight: 500; }
+
+/* ─── Post Hero ──────────────────────────────────────────────────────────────── */
+.post-hero {
+  position: relative;
+  background: linear-gradient(150deg, #0f2347 0%, var(--azul) 100%);
+  padding-block: 4rem 3.5rem;
+  overflow: hidden;
+}
+.post-hero-img {
+  position: absolute;
+  inset: 0;
+}
+.post-hero-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.25;
+}
+.post-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(27,58,107,0.7) 0%, rgba(15,35,71,0.92) 100%);
+}
+.post-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}
+.post-hero-content .badge {
+  background: var(--dourado);
+  color: var(--azul);
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+.post-hero-content h1 {
+  font-family: var(--font-display);
+  color: var(--branco);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.post-byline {
+  display: flex; align-items: center; gap: 1.25rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.post-date, .post-source {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.65);
+}
+.post-hero-summary {
+  color: rgba(255,255,255,0.75);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* ─── Post layout ────────────────────────────────────────────────────────────── */
+.post-content-section { padding-block: 4rem; }
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .post-layout { grid-template-columns: 1fr; }
+  .post-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+}
+@media (max-width: 600px) {
+  .post-sidebar { grid-template-columns: 1fr; }
+}
+
+/* ─── Prose ──────────────────────────────────────────────────────────────────── */
+.post-article {
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+}
+.prose { max-width: 680px; }
+.prose p { color: var(--texto); font-size: 1rem; line-height: 1.85; margin-bottom: 1.25rem; }
+.prose h2 { font-family: var(--font-display); font-size: 1.6rem; color: var(--azul); margin: 2.5rem 0 1rem; }
+.prose h3 { font-family: var(--font-display); font-size: 1.3rem; color: var(--azul); margin: 2rem 0 0.75rem; }
+.prose h4 { font-family: var(--font-display); font-size: 1.1rem; color: var(--azul); margin: 1.75rem 0 0.65rem; }
+.prose ul, .prose ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+.prose li { color: var(--texto); font-size: 1rem; line-height: 1.7; margin-bottom: 0.35rem; }
+.prose blockquote {
+  border-left: 4px solid var(--dourado);
+  padding: 1rem 1.5rem;
+  margin: 1.75rem 0;
+  background: var(--azul-claro);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-style: italic;
+  color: var(--azul);
+}
+.prose hr { border: none; border-top: 1px solid var(--cinza-cl); margin: 2rem 0; }
+.prose figure { margin: 2rem 0; }
+.prose figure img { border-radius: var(--radius); box-shadow: var(--shadow); }
+.prose figcaption { font-size: 0.82rem; color: var(--cinza); text-align: center; margin-top: 0.5rem; }
+.prose .callout {
+  background: var(--azul-claro);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  color: var(--azul);
+  border: 1px solid rgba(27,58,107,0.1);
+}
+.prose a { color: var(--azul-medio); text-decoration: underline; }
+.prose strong { font-weight: 600; color: var(--texto); }
+.prose em { color: var(--cinza); }
+
+.post-footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--cinza-cl); }
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────────── */
+.sidebar-card {
+  background: var(--branco);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.sidebar-card h4 {
+  font-family: var(--font-display);
+  color: var(--azul);
+  font-size: 1rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--dourado);
+  display: inline-block;
+}
+.sidebar-card p { color: var(--cinza); font-size: 0.875rem; line-height: 1.65; margin-bottom: 0.75rem; }
+.sidebar-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--azul-medio);
+  text-decoration: none;
+}
+.sidebar-link:hover { text-decoration: underline; }
+
+.sidebar-missas {
+  list-style: none;
+  display: flex; flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+.sidebar-missas li { font-size: 0.82rem; color: var(--cinza); }
+.sidebar-missas strong { color: var(--azul); font-weight: 600; margin-right: 0.35rem; }
+
+.sidebar-notion {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  background: #f7f6f3;
+  border: 1px solid #e5e3dd;
+}
+.sidebar-notion svg { flex-shrink: 0; margin-top: 2px; color: #555; }
+.sidebar-notion p { font-size: 0.78rem; color: #666; margin: 0; }
+</style>

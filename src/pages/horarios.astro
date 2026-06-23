@@ -1,0 +1,408 @@
+---
+// src/pages/horarios.astro
+import Layout from "../layouts/Layout.astro";
+import { getMissas } from "../lib/notion.js";
+
+const missas = await getMissas();
+
+const DIAS_CONFIG = {
+  Segunda: { abrev: "Seg", destaque: false },
+  Terça: { abrev: "Ter", destaque: false },
+  Quarta: { abrev: "Qua", destaque: false },
+  Quinta: { abrev: "Qui", destaque: false },
+  Sexta: { abrev: "Sex", destaque: false },
+  Sábado: { abrev: "Sáb", destaque: false },
+  Domingo: { abrev: "Dom", destaque: true },
+};
+
+const DIAS_ORDEM = Object.keys(DIAS_CONFIG);
+---
+
+<Layout
+  title="Horários de Missa"
+  description="Confira os horários de missas e celebrações da Paróquia Nossa Senhora Aparecida de Andradas/MG."
+>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Venha celebrar</p>
+      <h1>Horários de Missa</h1>
+      <p class="lead">
+        Participe da Eucaristia e fortaleça sua fé em comunidade. Todos são
+        bem-vindos!
+      </p>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg
+        viewBox="0 0 1440 50"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+      >
+        <path d="M0,30 C480,55 960,5 1440,30 L1440,50 L0,50 Z" fill="#F8F5EF"
+        ></path>
+      </svg>
+    </div>
+  </section>
+
+  <section class="horarios-page">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Igreja Matriz</span>
+        <h2>Missas Semanais</h2>
+        <p>Horários atualizados diretamente pela equipe paroquial.</p>
+      </div>
+
+      <!-- Cards por dia da semana -->
+      <div class="semana-grid">
+        {
+          DIAS_ORDEM.map((dia) => {
+            const { abrev, destaque } = DIAS_CONFIG[dia];
+            const horariosDia = missas[dia] ?? [];
+            return (
+              <article class:list={["dia-card", destaque && "destaque"]}>
+                <header class="dia-header">
+                  <span class="dia-abrev">{abrev}</span>
+                  <span class="dia-nome">{dia}</span>
+                </header>
+                <div class="dia-body">
+                  {horariosDia.length === 0 ? (
+                    <p class="sem-missa">Sem missa</p>
+                  ) : (
+                    horariosDia.map(({ horario, observacao }) => (
+                      <div class="missa-item">
+                        <span class="missa-hora">{horario}</span>
+                        {observacao && (
+                          <span class="missa-obs">{observacao}</span>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+
+      <!-- Tabela alternativa para telas maiores -->
+      <div class="tabela-wrap">
+        <table class="horarios-table">
+          <thead>
+            <tr>
+              <th>Dia</th>
+              <th>Horário</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              DIAS_ORDEM.flatMap((dia) =>
+                (missas[dia] ?? []).map(({ horario, observacao }, idx) => (
+                  <tr
+                    class:list={[DIAS_CONFIG[dia].destaque && "row-destaque"]}
+                  >
+                    {idx === 0 ? (
+                      <td rowspan={(missas[dia] ?? []).length} class="td-dia">
+                        {dia}
+                      </td>
+                    ) : null}
+                    <td class="horario-time">{horario}</td>
+                    <td class="obs">{observacao}</td>
+                  </tr>
+                )),
+              )
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Avisos fixos -->
+      <div class="avisos-cards">
+        {
+          [
+            {
+              icon: "🕯️",
+              titulo: "Confissões",
+              texto:
+                "Às sextas-feiras às 17h30 na sacristia. Em outros horários, entre em contato com o pároco.",
+            },
+            {
+              icon: "🔔",
+              titulo: "Datas Especiais",
+              texto:
+                "Festas litúrgicas e datas especiais podem ter horários diferenciados. Fique atento aos avisos paroquiais.",
+            },
+            {
+              icon: "🏥",
+              titulo: "Unção dos Enfermos",
+              texto:
+                "Atendemos a domicílio e hospitais. Ligue para a secretaria paroquial para agendar.",
+            },
+            {
+              icon: "💍",
+              titulo: "Casamentos",
+              texto:
+                "Agendamento mínimo de 6 meses de antecedência. Consulte a secretaria para o curso de noivos.",
+            },
+          ].map(({ icon, titulo, texto }) => (
+            <div class="aviso-card">
+              <span class="aviso-icon">{icon}</span>
+              <div>
+                <strong>{titulo}</strong>
+                <p>{texto}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* ─── Hero ─────────────────────────────────────────────────────────────────── */
+  .page-hero {
+    background: linear-gradient(150deg, #0f2347 0%, var(--azul) 100%);
+    padding-block: 4.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero .eyebrow {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dourado);
+    margin-bottom: 0.75rem;
+  }
+  .page-hero h1 {
+    font-family: var(--font-display);
+    color: var(--branco);
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 0.75rem;
+  }
+  .page-hero .lead {
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 560px;
+    font-size: 1.05rem;
+  }
+  .hero-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+  }
+  .hero-wave svg {
+    width: 100%;
+    display: block;
+  }
+
+  .horarios-page {
+    padding-block: 4rem 5rem;
+  }
+
+  /* ─── Semana grid (cards) ───────────────────────────────────────────────────── */
+  .semana-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 3.5rem;
+  }
+  @media (max-width: 900px) {
+    .semana-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (max-width: 500px) {
+    .semana-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .dia-card {
+    background: var(--branco);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border-top: 3px solid var(--azul-claro);
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+  }
+  .dia-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .dia-card.destaque {
+    border-top-color: var(--dourado);
+  }
+
+  .dia-header {
+    background: var(--azul);
+    padding: 0.65rem 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .dia-card.destaque .dia-header {
+    background: linear-gradient(135deg, #0f2347, var(--azul-medio));
+  }
+
+  .dia-abrev {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--branco);
+    line-height: 1;
+  }
+  .dia-nome {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.2rem;
+  }
+  .dia-card.destaque .dia-nome {
+    color: var(--dourado-cl);
+  }
+
+  .dia-body {
+    padding: 0.85rem 0.75rem 1rem;
+  }
+  .sem-missa {
+    font-size: 0.75rem;
+    color: var(--cinza-cl);
+    text-align: center;
+    padding: 0.5rem 0;
+    font-style: italic;
+  }
+
+  .missa-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--azul-claro);
+  }
+  .missa-item:last-child {
+    border-bottom: none;
+  }
+  .missa-hora {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--azul);
+    line-height: 1.2;
+  }
+  .missa-obs {
+    font-size: 0.68rem;
+    color: var(--cinza);
+    line-height: 1.3;
+    margin-top: 0.15rem;
+    font-style: italic;
+  }
+
+  /* ─── Tabela (telas médias+) ─────────────────────────────────────────────────── */
+  .tabela-wrap {
+    display: none;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  @media (min-width: 640px) {
+    .tabela-wrap {
+      display: block;
+    }
+  }
+
+  .horarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--branco);
+    font-size: 0.9rem;
+  }
+  .horarios-table thead {
+    background: var(--azul);
+  }
+  .horarios-table thead th {
+    color: var(--branco);
+    padding: 0.9rem 1.25rem;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .horarios-table tbody tr {
+    border-bottom: 1px solid var(--cinza-cl);
+    transition: background 0.15s;
+  }
+  .horarios-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  .horarios-table tbody tr:hover {
+    background: var(--azul-claro);
+  }
+  .horarios-table td {
+    padding: 0.75rem 1.25rem;
+    color: var(--texto);
+    vertical-align: middle;
+  }
+  .td-dia {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--azul);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    border-right: 2px solid var(--azul-claro);
+  }
+  .row-destaque .td-dia {
+    color: var(--dourado);
+  }
+  .horario-time {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--azul);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .obs {
+    color: var(--cinza);
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  /* ─── Avisos cards ──────────────────────────────────────────────────────────── */
+  .avisos-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .aviso-card {
+    background: var(--branco);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .aviso-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+  .aviso-card strong {
+    display: block;
+    font-weight: 600;
+    color: var(--azul);
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+  }
+  .aviso-card p {
+    font-size: 0.85rem;
+    color: var(--cinza);
+    line-height: 1.65;
+    margin: 0;
+  }
+</style>

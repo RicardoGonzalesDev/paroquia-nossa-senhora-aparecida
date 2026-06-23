@@ -1,0 +1,161 @@
+---
+// src/pages/sobre.astro
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="A Paróquia" description="Conheça a história e missão da Paróquia Nossa Senhora Aparecida de Andradas, Minas Gerais.">
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Nossa comunidade</p>
+      <h1>A Paróquia</h1>
+      <p class="lead">Uma comunidade de fé enraizada em Andradas, servindo com amor e dedicação há décadas.</p>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,30 C480,55 960,5 1440,30 L1440,50 L0,50 Z" fill="#F8F5EF"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="sobre-section">
+    <div class="container sobre-grid">
+      <div class="sobre-texto">
+        <span class="eyebrow-inline">Nossa História</span>
+        <h2>Uma paróquia com raízes profundas</h2>
+        <p>A Paróquia Nossa Senhora Aparecida está presente em Andradas, Minas Gerais, como um ponto de encontro, oração e serviço ao próximo. Sob o patronato da Padroeira do Brasil, nossa comunidade celebra a fé, acolhe os que chegam e caminha junto com toda a cidade.</p>
+        <p>Pertencemos à <strong>Diocese de Poços de Caldas</strong>, e nossa missão é anunciar o Evangelho, celebrar os sacramentos e promover a caridade como sinal do amor de Deus no mundo.</p>
+
+        <div class="valores-grid">
+          {[
+            { icon: '🙏', titulo: 'Oração', desc: 'A liturgia e a oração são o coração da vida paroquial.' },
+            { icon: '🤝', titulo: 'Comunidade', desc: 'Acolhemos a todos com fraternidade e respeito.' },
+            { icon: '❤️', titulo: 'Serviço', desc: 'Seguimos o exemplo de Cristo no cuidado ao próximo.' },
+            { icon: '📖', titulo: 'Formação', desc: 'Catequese, grupos e retiros para crescer na fé.' },
+          ].map(({ icon, titulo, desc }) => (
+            <div class="valor-item">
+              <span>{icon}</span>
+              <div>
+                <strong>{titulo}</strong>
+                <p>{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="sobre-deco">
+        <div class="deco-card">
+          <div class="deco-cross">✝</div>
+          <h3>N. Sra. Aparecida</h3>
+          <p>Padroeira do Brasil, celebrada em 12 de outubro, Nossa Senhora Aparecida é símbolo de fé, esperança e misericórdia para o povo brasileiro.</p>
+          <div class="deco-line"></div>
+          <p class="deco-quote">"Magnificat anima mea Dominum."<br><em>— Lc 1,46</em></p>
+        </div>
+
+        <div class="stats-row">
+          {[
+            { num: '7', label: 'missas\npor semana' },
+            { num: '12', label: 'grupos\nparoquiais' },
+            { num: '1', label: 'comunidade\nunida' },
+          ].map(({ num, label }) => (
+            <div class="stat">
+              <span class="stat-num">{num}</span>
+              <span class="stat-label">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grupos e Ministérios -->
+  <section class="grupos-section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Participe</span>
+        <h2>Grupos e Ministérios</h2>
+        <p>Nossa paróquia é animada por grupos que servem e evangelizam. Encontre seu lugar!</p>
+      </div>
+      <div class="grupos-grid">
+        {[
+          { nome: 'Pastoral da Criança',    desc: 'Acompanhamento do desenvolvimento integral das crianças.' },
+          { nome: 'Grupo de Jovens',         desc: 'Espaço de crescimento na fé para a juventude paroquial.' },
+          { nome: 'Ministério de Música',    desc: 'Animação litúrgica nas missas e celebrações.' },
+          { nome: 'Pastoral da Família',     desc: 'Acompanhamento e apoio às famílias da comunidade.' },
+          { nome: 'Catequese',               desc: 'Formação para a Primeira Eucaristia e Crisma.' },
+          { nome: 'Vicentinos',              desc: 'Serviço aos mais pobres à luz da espiritualidade vicentina.' },
+          { nome: 'Terço dos Homens',        desc: 'Grupo de oração e fraternidade masculina.' },
+          { nome: 'Grupo de Oração',         desc: 'Louvor, oração e partilha da Palavra de Deus.' },
+        ].map(({ nome, desc }) => (
+          <div class="grupo-card">
+            <h4>{nome}</h4>
+            <p>{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+.page-hero {
+  background: linear-gradient(150deg, #0f2347 0%, var(--azul) 100%);
+  padding-block: 4.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero .eyebrow { display: block; font-size:.78rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--dourado); margin-bottom:.75rem; }
+.page-hero h1 { font-family:var(--font-display); color:var(--branco); font-size:clamp(2rem,4vw,3rem); margin-bottom:.75rem; }
+.page-hero .lead { color:rgba(255,255,255,.75); max-width:560px; font-size:1.05rem; }
+.hero-wave { position:absolute; bottom:-1px; left:0; right:0; }
+.hero-wave svg { width:100%; display:block; }
+
+.sobre-section { padding-block: 5rem; }
+.sobre-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 900px) { .sobre-grid { grid-template-columns: 1fr; } }
+
+.eyebrow-inline { display:block; font-size:.78rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--dourado); margin-bottom:.6rem; }
+.sobre-texto h2 { font-family:var(--font-display); font-size:clamp(1.75rem,3vw,2.25rem); color:var(--azul); margin-bottom:1.25rem; }
+.sobre-texto p { color:var(--cinza); line-height:1.8; margin-bottom:1rem; }
+
+.valores-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-top:2rem; }
+.valor-item { display:flex; gap:.75rem; align-items:flex-start; }
+.valor-item span { font-size:1.5rem; flex-shrink:0; }
+.valor-item strong { font-size:.9rem; font-weight:600; color:var(--azul); display:block; margin-bottom:.2rem; }
+.valor-item p { font-size:.82rem; color:var(--cinza); margin:0; }
+@media (max-width:480px) { .valores-grid { grid-template-columns:1fr; } }
+
+/* Deco card */
+.deco-card {
+  background: linear-gradient(150deg, var(--azul) 0%, #0f2347 100%);
+  border-radius: var(--radius);
+  padding: 2rem;
+  color: rgba(255,255,255,.8);
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.deco-cross { font-size:3rem; color:var(--dourado); margin-bottom:.75rem; }
+.deco-card h3 { font-family:var(--font-display); color:var(--branco); font-size:1.25rem; margin-bottom:.75rem; }
+.deco-card p { font-size:.875rem; line-height:1.7; }
+.deco-line { width:40px; height:2px; background:var(--dourado); margin:1.25rem auto; }
+.deco-quote { font-style:italic; font-size:.85rem; color:var(--dourado-cl); }
+.deco-quote em { font-style:normal; display:block; margin-top:.3rem; color:rgba(255,255,255,.5); font-size:.78rem; }
+
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; }
+.stat { background:var(--branco); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.25rem .75rem; text-align:center; }
+.stat-num { display:block; font-family:var(--font-display); font-size:2rem; font-weight:700; color:var(--azul); line-height:1; }
+.stat-label { font-size:.72rem; color:var(--cinza); white-space:pre-line; display:block; margin-top:.35rem; line-height:1.4; }
+
+/* Grupos */
+.grupos-section { background:var(--azul-claro); padding-block:5rem; }
+.grupos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.25rem; }
+.grupo-card { background:var(--branco); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.5rem; border-left:3px solid var(--dourado); }
+.grupo-card h4 { font-family:var(--font-display); color:var(--azul); font-size:1rem; margin-bottom:.5rem; }
+.grupo-card p { color:var(--cinza); font-size:.875rem; line-height:1.65; margin:0; }
+</style>
