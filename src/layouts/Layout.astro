@@ -97,7 +97,7 @@ const { title, description = 'Paróquia Nossa Senhora Aparecida – Andradas, Mi
     </div>
   </footer>
 
-  <div class="cookie-float" id="cookie-float">
+  <div class="cookie-float" id="cookie-float" hidden>
     <p>Este site usa cookies para melhorar sua experiência. <a href="/privacidade" class="cookie-float-link">Política de Privacidade</a>.</p>
     <button type="button" id="cookie-float-accept">Aceitar</button>
   </div>
@@ -154,6 +154,9 @@ const { title, description = 'Paróquia Nossa Senhora Aparecida – Andradas, Mi
     if (!localStorage.getItem(COOKIE_KEY)) {
       cookieBanner?.removeAttribute('hidden');
       cookieFloat?.removeAttribute('hidden');
+    } else {
+      hideCookieBanner();
+      hideCookieFloat();
     }
 
     document.getElementById('cookie-accept')?.addEventListener('click', acceptCookies);
