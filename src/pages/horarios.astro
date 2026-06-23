@@ -2,10 +2,11 @@
 // src/pages/horarios.astro
 import Layout from "../layouts/Layout.astro";
 import { getMissas } from "../lib/notion.js";
+import type { HorarioMissa, DiaConfig } from "../types";
 
-const missas = await getMissas();
+const missas: Record<string, HorarioMissa[]> = await getMissas();
 
-const DIAS_CONFIG = {
+const DIAS_CONFIG: Record<string, DiaConfig> = {
   Segunda: { abrev: "Seg", destaque: false },
   Terça: { abrev: "Ter", destaque: false },
   Quarta: { abrev: "Qua", destaque: false },
@@ -54,7 +55,7 @@ const DIAS_ORDEM = Object.keys(DIAS_CONFIG);
       <!-- Cards por dia da semana -->
       <div class="semana-grid">
         {
-          DIAS_ORDEM.map((dia) => {
+          DIAS_ORDEM.map((dia: string) => {
             const { abrev, destaque } = DIAS_CONFIG[dia];
             const horariosDia = missas[dia] ?? [];
             return (
@@ -67,7 +68,7 @@ const DIAS_ORDEM = Object.keys(DIAS_CONFIG);
                   {horariosDia.length === 0 ? (
                     <p class="sem-missa">Sem missa</p>
                   ) : (
-                    horariosDia.map(({ horario, observacao }) => (
+                    horariosDia.map(({ horario, observacao }: HorarioMissa) => (
                       <div class="missa-item">
                         <span class="missa-hora">{horario}</span>
                         {observacao && (
@@ -96,7 +97,7 @@ const DIAS_ORDEM = Object.keys(DIAS_CONFIG);
           <tbody>
             {
               DIAS_ORDEM.flatMap((dia) =>
-                (missas[dia] ?? []).map(({ horario, observacao }, idx) => (
+                (missas[dia] ?? []).map(({ horario, observacao }: HorarioMissa, idx: number) => (
                   <tr
                     class:list={[DIAS_CONFIG[dia].destaque && "row-destaque"]}
                   >

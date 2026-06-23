@@ -2,19 +2,20 @@
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 import { getAvisos, getMissas } from '../lib/notion.js';
+import type { Aviso, HorarioMissa } from '../types';
 
 const missas = await getMissas();
 const avisos = await getAvisos();
 
-const horariosHome = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => ({
+const horariosHome = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia: string) => ({
   dia,
-  horarios: (missas[dia] ?? []).map(({ horario, observacao }) =>
+  horarios: (missas[dia] as HorarioMissa[] ?? []).map(({ horario, observacao }: HorarioMissa) =>
     observacao ? `${horario} – ${observacao}` : horario
   ),
   destaque: dia === 'Domingo',
 }));
 
-const stars = Array.from({ length: 48 }, (_, i) => ({
+const stars = Array.from({ length: 48 }, (_: unknown, i: number) => ({
   left: ((i * 37 + 13) % 97) + 1,
   top: ((i * 53 + 7) % 93) + 2,
   size: (i % 3) + 1.5,
@@ -82,7 +83,7 @@ const stars = Array.from({ length: 48 }, (_, i) => ({
     <div class="container avisos-inner">
       <span class="aviso-label">📢 Avisos</span>
       <div class="avisos-list">
-        {avisos.map((aviso, index) => (
+        {avisos.map((aviso: Aviso, index: number) => (
           <>
             {index > 0 && <span class="sep">·</span>}
             {aviso.link
@@ -113,7 +114,7 @@ const stars = Array.from({ length: 48 }, (_, i) => ({
             <ul class="horario-list">
               {horarios.length === 0
                 ? <li>Sem missa</li>
-                : horarios.map(h => <li>{h}</li>)
+                : horarios.map((h: string) => <li>{h}</li>)
               }
             </ul>
           </div>
